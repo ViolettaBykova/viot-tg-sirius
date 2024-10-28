@@ -88,22 +88,3 @@ func (h *BotHandlers) HandleSettings(m *tb.Message) {
 	h.Bot.Send(m.Sender, "Выберите интервал обновления: 30 секунд, 1 минута, 15 минут, 1 час, 6 часов, 12 часов.")
 	h.botService.SetUserScene(ctx, m.Sender.ID, scenes.SceneSelectInterval)
 }
-
-// SendWeatherUpdate отправляет пользователю прогноз погоды
-func (h *BotHandlers) SendWeatherUpdate(userID int64) {
-	ctx := context.TODO()
-	city, err := h.botService.GetUserCity(ctx, userID)
-	if err != nil || city == "" {
-		log.Printf("Не удалось найти город для пользователя %d\n", userID)
-		return
-	}
-
-	weather := fetchWeatherData(city)
-	h.Bot.Send(&tb.User{ID: userID}, fmt.Sprintf("Прогноз погоды для %s: %s", city, weather))
-}
-
-// fetchWeatherData – функция-заглушка для получения данных о погоде
-func fetchWeatherData(city string) string {
-	// Здесь может быть вызов API для получения данных о погоде
-	return "ясно, +25°C"
-}
